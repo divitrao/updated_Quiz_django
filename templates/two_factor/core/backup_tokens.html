@@ -1,0 +1,32 @@
+{% extends "two_factor/_base_focus.html" %}
+{% load i18n %}
+
+{% block content %}
+  <h1 class="text-center">{% block title %}{% trans "Backup Tokens" %}{% endblock %}</h1>
+  <p class="">{% blocktrans trimmed %}Backup tokens can be used when your primary and backup
+      phone numbers aren't available. The backup tokens below can be used
+      for login verification. If you've used up all your backup tokens, you
+      can generate a new set of backup tokens. Only the backup tokens shown
+      below will be valid.{% endblocktrans %}</p>
+
+  {% if device.token_set.count %}
+  <div class="text-center">
+    
+      {% for token in device.token_set.all %}
+      {{forloop.counter}}) {{ token.token }}
+        <br>
+      {% endfor %}
+    
+  </div>
+    <p class="text-center">{% blocktrans %}Remember any one of the above Token and then you can use it while login{% endblocktrans %}</p>
+  {% else %}
+    <p class="text-center">{% trans "You don't have any backup codes yet." %}</p>
+  {% endif %}
+
+  <form class="text-center" method="post">{% csrf_token %}{{ form }}
+    <a href="{% url 'two_factor:profile'%}"
+       class="pull-right btn btn-link">{% trans "Back to Account Security" %}</a>
+      <a href="/">Go to Home</a>
+    <button class="btn btn-primary" type="submit">{% trans "Generate Tokens" %}</button>
+  </form>
+{% endblock %}
